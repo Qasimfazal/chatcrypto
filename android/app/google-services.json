@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "166765360600",
+    "firebase_url": "https://crypto-a5942-default-rtdb.firebaseio.com",
+    "project_id": "crypto-a5942",
+    "storage_bucket": "crypto-a5942.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166765360600:android:7aa9fa2e4b700e9d5eaead",
+        "android_client_info": {
+          "package_name": "com.example.chatcrypto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "166765360600-lftnm21u8evqe6k42ckpl9ujvmuikvet.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd0PX85ObmdaytGLGOb5N4U5r6SrLkqVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "166765360600-lftnm21u8evqe6k42ckpl9ujvmuikvet.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "166765360600-pbh45q3dicgj0ph46u5qos2t6g7r5oll.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cryptochatapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166765360600:android:5b650638da2714805eaead",
+        "android_client_info": {
+          "package_name": "com.example.cryptochatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "166765360600-e5omdfc16qjj6utp3mhl83fagq75lu3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cryptochatapp",
+            "certificate_hash": "0c8dbd177c49f8a827ecbba93497b835c12d48c7"
+          }
+        },
+        {
+          "client_id": "166765360600-lftnm21u8evqe6k42ckpl9ujvmuikvet.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd0PX85ObmdaytGLGOb5N4U5r6SrLkqVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "166765360600-lftnm21u8evqe6k42ckpl9ujvmuikvet.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "166765360600-pbh45q3dicgj0ph46u5qos2t6g7r5oll.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cryptochatapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

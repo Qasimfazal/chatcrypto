@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>166765360600-pjmcnilcfg7rcahfh0vr0gpiask0iht3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.166765360600-pjmcnilcfg7rcahfh0vr0gpiask0iht3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>166765360600-e5omdfc16qjj6utp3mhl83fagq75lu3q.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAzTd7QyQga2j1PJz0-I2EaIrOFgdIyUPg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>166765360600</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cryptochatapp.cryptochatapp</string>
+	<key>PROJECT_ID</key>
+	<string>crypto-a5942</string>
+	<key>STORAGE_BUCKET</key>
+	<string>crypto-a5942.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:166765360600:ios:8f4e2af74505321f5eaead</string>
+	<key>DATABASE_URL</key>
+	<string>https://crypto-a5942-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
