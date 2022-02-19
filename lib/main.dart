@@ -4,11 +4,13 @@ import 'package:chatcrypto/pages/signup.dart';
 import 'package:chatcrypto/pages/splash.dart';
 import 'package:flutter/material.dart';
 
+
 void main() {
   runApp(ChatterApp());
 }
 class ChatterApp extends StatelessWidget {
   @override
+
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,

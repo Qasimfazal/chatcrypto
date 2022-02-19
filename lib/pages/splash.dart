@@ -1,4 +1,5 @@
 
+import 'package:chatcrypto/Services/VigenereCipher.dart';
 import 'package:chatcrypto/widgets/custombutton.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -12,8 +13,16 @@ class _ChatterHomeState extends State<ChatterHome>
     with TickerProviderStateMixin {
   AnimationController mainController;
   Animation mainAnimation;
+
+ static const String keyy ="Q";
+  String Textt = "MYNAMEISQASIM ";
+
   @override
   void initState() {
+    // var CT= VigenereCipher.cipherText(Textt, keyy);
+    // print(CT);
+    // var ORIGNAL_TEXT= VigenereCipher.originalText(Textt, keyy);
+    // print(ORIGNAL_TEXT);
     super.initState();
     mainController = AnimationController(
       duration: Duration(milliseconds: 500),

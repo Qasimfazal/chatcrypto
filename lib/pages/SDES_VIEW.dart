@@ -1,5 +1,8 @@
-import 'package:chatcrypto/Result.dart';
-import 'package:chatcrypto/Services/CeaserCipher.dart';
+///S-Des Algo chatscreen Code
+import 'dart:math';
+
+import 'package:chatcrypto/Services/Ascii.dart';
+import 'package:chatcrypto/Services/SDSservices.dart';
 import 'package:edge_alert/edge_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +12,7 @@ import '../constants.dart';
 final _firestore = Firestore.instance;
 String username = 'User';
 String email = 'user@example.com';
-String messageText;
+
 FirebaseUser loggedInUser;
 
 class ChatterScreen extends StatefulWidget {
@@ -19,8 +22,58 @@ class ChatterScreen extends StatefulWidget {
 
 class _ChatterScreenState extends State<ChatterScreen> {
   final chatMsgTextController = TextEditingController();
-
   final _auth = FirebaseAuth.instance;
+  String messageText;
+  //String encymessage;
+  sendTextMessage(String messageText) async {
+    SDESServices services = SDESServices();
+
+    Random rand = Random();
+    int j = rand.nextInt(messageText.length);
+    String key = messageText.codeUnitAt(j).toRadixString(2);
+    key = "0" + key + "10";
+    print("MY KEY:- $key");
+    List<String> keyValues = services.keyGeneration(key);
+
+    ///ecryption
+    List<String> CT = services.sDesEncryption(messageText, keyValues[0], keyValues[1]);
+    print(CT);
+    List<int> list = [];
+    String res = "";
+    CT.forEach((element) {
+      // list.add(int.parse(element, radix: 2));
+      res = res + myAscii[element];
+    });
+    //print(list);
+    //print(utf8.decode(list, allowMalformed: true));
+    print(res);
+    messageText = res;
+
+    await _firestore.collection('messages').add({
+      'sender': username,
+      'text': messageText,
+      'timestamp':DateTime.now().millisecondsSinceEpoch,
+      'senderemail': email,
+      'keyValues0' : keyValues[0],
+      'keyValues1' : keyValues[1],
+
+    });
+
+  }
+// Decrypyion(Receivedmsg){
+//   SDESServices services = SDESServices();
+//   List<String> PT = services.sDesDecryption(Receivedmsg, keyValues[0], keyValues[1]);
+//   print(PT);
+//   List<int> list2 = [];
+//   String res2 = "";
+//   PT.forEach((element) {
+//     // list.add(int.parse(element, radix: 2));
+//     res2 = res2 + myAscii[element];
+//   });
+//   //print(list);
+//   //print(utf8.decode(list, allowMalformed: true));
+//   print(res2);
+// }
 
   @override
   void initState() {
@@ -93,17 +146,13 @@ class _ChatterScreenState extends State<ChatterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Chatter',
+                  'CryptoChat',
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 16,
                       color: Colors.deepPurple),
                 ),
-                Text('by ishandeveloper',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 8,
-                        color: Colors.deepPurple))
+
               ],
             ),
           ],
@@ -161,7 +210,7 @@ class _ChatterScreenState extends State<ChatterScreen> {
                       padding: const EdgeInsets.only(left:8.0,top:2,bottom: 2),
                       child: TextField(
                         onChanged: (value) {
-                          messageText = value;
+                          messageText= value;
                         },
                         controller: chatMsgTextController,
                         decoration: kMessageTextFieldDecoration,
@@ -172,15 +221,17 @@ class _ChatterScreenState extends State<ChatterScreen> {
                 MaterialButton(
                     shape: CircleBorder(),
                     color: Colors.blue,
-                    onPressed: () async{
-                     await Ceaser.process(true,messageText , 9);
+                    onPressed: () async {
+                      sendTextMessage(chatMsgTextController.text);
                       chatMsgTextController.clear();
-                      _firestore.collection('messages').add({
-                        'sender': username,
-                        'text': Result,
-                        'timestamp':DateTime.now().millisecondsSinceEpoch,
-                        'senderemail': email
-                      });
+
+                      // await sendTextMessage(messageText);
+                      // await _firestore.collection('messages').add({
+                      //   'sender': username,
+                      //   'text': messageText,
+                      //   'timestamp':DateTime.now().millisecondsSinceEpoch,
+                      //   'senderemail': email
+                      // });
                     },
                     child:Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -202,31 +253,49 @@ class _ChatterScreenState extends State<ChatterScreen> {
 
 class ChatStream extends StatelessWidget {
   @override
+  SDESServices services = SDESServices();
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _firestore.collection('messages').orderBy('timestamp').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data.documents.reversed;
+
+
           List<MessageBubble> messageWidgets = [];
+
+
           for (var message in messages) {
             final msgText = message.data['text'];
             final msgSender = message.data['sender'];
-            // final msgSenderEmail = message.data['senderemail'];
+            final key1 = message.data['keyValues0'];
+            final key2 = message.data['keyValues1'];
+            final msgSenderEmail = message.data['senderemail'];
             final currentUser = loggedInUser.displayName;
-            Ceaser.process(false,msgText , 9);
-            // print('MSG'+msgSender + '  CURR'+currentUser);
+            List<String> PT = services.sDesDecryption(msgText, key1, key2);
+            print(PT);
+            List<int> list2 = [];
+            String res2 = "";
+            PT.forEach((element) {
+              // list.add(int.parse(element, radix: 2));
+              res2 = res2 + myAscii[element];
+            });
+            //print(list);
+            //print(utf8.decode(list, allowMalformed: true));
+            print(res2);
+            print('MSG'+msgSender + '  CURR'+currentUser);
             final msgBubble = MessageBubble(
-                msgText: Result,
+                msgText: res2??''.toString(),
                 msgSender: msgSender,
                 user: currentUser == msgSender);
             messageWidgets.add(msgBubble);
+
           }
           return Expanded(
             child: ListView(
               reverse: true,
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              children: messageWidgets,
+              children: messageWidgets??'',
             ),
           );
         } else {
@@ -241,8 +310,8 @@ class ChatStream extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  final String msgText;
-  final String msgSender;
+  var msgText;
+  var  msgSender;
   final bool user;
   MessageBubble({this.msgText, this.msgSender, this.user});
 
@@ -288,3 +357,4 @@ class MessageBubble extends StatelessWidget {
     );
   }
 }
+
