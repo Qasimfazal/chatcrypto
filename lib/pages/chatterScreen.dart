@@ -173,13 +173,18 @@ class _ChatterScreenState extends State<ChatterScreen> {
                     shape: CircleBorder(),
                     color: Colors.blue,
                     onPressed: () async{
-                     await Ceaser.process(true,messageText , 9);
+                      int CountUser_KU = username.length;
+
+
+
+                     await Ceaser.process(true,messageText , CountUser_KU);
                       chatMsgTextController.clear();
                       _firestore.collection('messages').add({
                         'sender': username,
                         'text': Result,
                         'timestamp':DateTime.now().millisecondsSinceEpoch,
-                        'senderemail': email
+                        'senderemail': email,
+                        'senderKU': CountUser_KU,
                       });
                     },
                     child:Padding(
@@ -212,12 +217,14 @@ class ChatStream extends StatelessWidget {
           for (var message in messages) {
             final msgText = message.data['text'];
             final msgSender = message.data['sender'];
+            final SenderKU = message.data['senderKU'];
             // final msgSenderEmail = message.data['senderemail'];
             final currentUser = loggedInUser.displayName;
-            Ceaser.process(false,msgText , 9);
+            Ceaser.process(false,msgText , SenderKU);
             // print('MSG'+msgSender + '  CURR'+currentUser);
             final msgBubble = MessageBubble(
                 msgText: Result,
+                SenderKU: SenderKU.toString(),
                 msgSender: msgSender,
                 user: currentUser == msgSender);
             messageWidgets.add(msgBubble);
@@ -243,8 +250,9 @@ class ChatStream extends StatelessWidget {
 class MessageBubble extends StatelessWidget {
   final String msgText;
   final String msgSender;
+  final String SenderKU;
   final bool user;
-  MessageBubble({this.msgText, this.msgSender, this.user});
+  MessageBubble({this.msgText, this.msgSender, this.user,this.SenderKU});
 
   @override
   Widget build(BuildContext context) {
@@ -274,7 +282,7 @@ class MessageBubble extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Text(
-                msgText,
+                msgText +" KU ("+SenderKU+")",
                 style: TextStyle(
                   color: user ? Colors.white : Colors.blue,
                   fontFamily: 'Poppins',

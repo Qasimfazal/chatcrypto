@@ -1,4 +1,5 @@
 
+import 'package:chatcrypto/pages/chatterScreen.dart';
 import 'package:chatcrypto/widgets/custombutton.dart';
 import 'package:chatcrypto/widgets/customtextinput.dart';
 import 'package:edge_alert/edge_alert.dart';
@@ -119,13 +120,16 @@ class _ChatterSignUpState extends State<ChatterSignUp> {
                             signingup = true;
                           });
                           try {
-                            final newUser =
-                                await _auth.createUserWithEmailAndPassword(
-                                    email: email, password: password);
+                            final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
                             if (newUser != null) {
                               UserUpdateInfo info = UserUpdateInfo();
                               info.displayName = name;
+
                               await newUser.user.updateProfile(info);
+                              // int CountUser_KU;
+                              // for( var i = 0 ; i == name.length; i++ ) {
+                              //   CountUser_KU = i;
+                              // }
 
                               Navigator.pushNamed(context, '/chat');
                             }
