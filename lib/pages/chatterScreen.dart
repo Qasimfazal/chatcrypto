@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:chatcrypto/Result.dart';
 import 'package:chatcrypto/Services/CeaserCipher.dart';
 import 'package:edge_alert/edge_alert.dart';
@@ -60,7 +62,24 @@ class _ChatterScreenState extends State<ChatterScreen> {
   //     snapshot.documents;
   //   }
   // }
-
+  String RandomNumber ;
+  // void Rand(){
+  //   var rng = Random();
+  //   for (var i = 1; i < 26; i++) {
+  //     print(rng.nextInt(26));
+  //     RandomNumber =rng.toString();
+  //   }
+  // }
+  void Random_Generator(){
+    RandomNumber = Random().nextInt(26).toString();
+    int Randomdata= int.parse(RandomNumber);
+    print(RandomNumber);
+    if(Randomdata==0){
+      Random();
+    }else {
+      print(Text("NUmber is" + RandomNumber));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,12 +195,20 @@ class _ChatterScreenState extends State<ChatterScreen> {
                       int CountUser_KU = username.length;
 
 
-
-                     await Ceaser.process(true,messageText , CountUser_KU);
+                      Random_Generator();
+                      int Randomdata= int.parse(RandomNumber);
+                    // await Ceaser.processE(true,messageText , Randomdata);
+                     await Ceaser.processE(true,messageText , Randomdata);
+                      print(Result);
+                      //Randomkey = data;
+                    // await Ceaser.processE2(true,RandomNumber ,CountUser_KU );
+                     await Ceaser.processE2(true, RandomNumber, CountUser_KU);
+                      print(Result3);
                       chatMsgTextController.clear();
                       _firestore.collection('messages').add({
                         'sender': username,
-                        'text': Result,
+                        'textone': Result,
+                        'texttwo': Result3,
                         'timestamp':DateTime.now().millisecondsSinceEpoch,
                         'senderemail': email,
                         'senderKU': CountUser_KU,
@@ -215,15 +242,21 @@ class ChatStream extends StatelessWidget {
           final messages = snapshot.data.documents.reversed;
           List<MessageBubble> messageWidgets = [];
           for (var message in messages) {
-            final msgText = message.data['text'];
+            final msgText = message.data['textone'];
+            final msgText2 = message.data['texttwo'];
             final msgSender = message.data['sender'];
             final SenderKU = message.data['senderKU'];
             // final msgSenderEmail = message.data['senderemail'];
             final currentUser = loggedInUser.displayName;
-            Ceaser.process(false,msgText , SenderKU);
+        //    Ceaser.processD(false,msgText2 , SenderKU);
+            Ceaser.process(false, msgText2, SenderKU);
+            print(ResultD2);
+            int CtD= int.parse(ResultD2);
+            Ceaser.processDecryptFinal(false,msgText , CtD);
+
             // print('MSG'+msgSender + '  CURR'+currentUser);
             final msgBubble = MessageBubble(
-                msgText: Result,
+                msgText: ResultDecryptFinal,
                 SenderKU: SenderKU.toString(),
                 msgSender: msgSender,
                 user: currentUser == msgSender);
