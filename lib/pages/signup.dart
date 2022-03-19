@@ -1,11 +1,18 @@
 
+import 'dart:async';
+
+import 'package:chatcrypto/Services/COnverter.dart';
+import 'package:chatcrypto/Services/CeaserCipher.dart';
 import 'package:chatcrypto/pages/chatterScreen.dart';
 import 'package:chatcrypto/widgets/custombutton.dart';
 import 'package:chatcrypto/widgets/customtextinput.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edge_alert/edge_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
+import '../Result.dart';
 
 class ChatterSignUp extends StatefulWidget {
   @override
@@ -19,7 +26,75 @@ class _ChatterSignUpState extends State<ChatterSignUp> {
   String password;
   String name;
   bool signingup = false;
+  int KU;
+  int seven = 7;
+  int two = 2;
+  final _firestore = Firestore.instance;
   @override
+
+
+  void SaveData(String userid) async {
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    int ku = email.length - name.length;
+    int nameLength =name.length;
+    if(ku >=10 ){
+      int a  = ku - seven;
+      KU =a;
+        if(KU >= 10){
+          int b  = KU - two;
+          KU= b;
+        }
+    }
+
+    print(KU);
+    String key = KU.toString();
+    await Ceaser.processE2(true, key , nameLength);
+    print(Result3);
+    await _firestore.collectionGroup("Peoples").reference().document("Users").collection(uid).add({
+      "Name": name,
+      "email": email,
+      "password": password,
+      "Ku": Result3,
+    }).then((value) => _showtimer());
+    // if(ku >= 26){
+    //   int  a=  ku%26;
+    //   if(a >= 10){
+    //
+    //   }
+    //    Ku = a.toString();
+    //  await Ceaser.processE2(true, Ku, nameLength);
+    //   print(Result3);
+    //   await _firestore.collectionGroup("Peoples").reference().document("Users").collection(uid).add({
+    //     "Name": name,
+    //     "email": email,
+    //     "password": password,
+    //     "Ku": Result3,
+    //   }).then((value) => _showtimer());
+    // }else{
+    //   String _ku = ku.toString();
+    //   // await Ceaser.processE2(true, _ku, nameLength);
+    //   // print(Result3);
+    //   // await _firestore.collectionGroup("Peoples").reference().document("Users").collection(uid).add({
+    //   //   "Name": name,
+    //   //   "email": email,
+    //   //   "password": password,
+    //   //   "Ku": Result3,
+    //   // }).then((value) => _showtimer());
+    // }
+
+  }
+
+  _showtimer() {
+    Timer(
+      Duration(seconds: 3),
+          () {
+        // _btnController.success();
+      },
+    );
+  }
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       inAsyncCall: signingup,
@@ -58,13 +133,6 @@ class _ChatterSignUpState extends State<ChatterSignUp> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
-                  // Text(
-                  //   "World's most private chatting app".toUpperCase(),
-                  //   style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontSize: 12,
-                  //       color: Colors.deepPurple),
-                  // ),
                   CustomTextInput(
                     hintText: 'Name',
                     leading: Icons.text_format,
@@ -76,14 +144,6 @@ class _ChatterSignUpState extends State<ChatterSignUp> {
                   SizedBox(
                     height: 0,
                   ),
-                  // CustomTextInput(
-                  //   hintText: 'Username',
-                  //   obscure: false,
-                  //   leading: Icons.supervised_user_circle,
-                  //   userTyped: (value) {
-                  //     username = value;
-                  //   },
-                  // ),
                   SizedBox(
                     height: 0,
                   ),
@@ -126,12 +186,11 @@ class _ChatterSignUpState extends State<ChatterSignUp> {
                               info.displayName = name;
 
                               await newUser.user.updateProfile(info);
-                              // int CountUser_KU;
-                              // for( var i = 0 ; i == name.length; i++ ) {
-                              //   CountUser_KU = i;
-                              // }
-
-                              Navigator.pushNamed(context, '/chat');
+                              if (newUser != null) {
+                                String uid = newUser.user.uid;
+                                SaveData(uid);
+                              }
+                              Navigator.pushNamed(context, '/login');
                             }
                           } catch (e) {
                             setState(() {

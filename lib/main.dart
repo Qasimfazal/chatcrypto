@@ -6,10 +6,11 @@ import 'package:chatcrypto/pages/chatterScreen.dart';
 import 'package:chatcrypto/pages/login.dart';
 import 'package:chatcrypto/pages/signup.dart';
 import 'package:chatcrypto/pages/splash.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
-void main() {
+void main() async{
   runApp(ChatterApp());
   // Ceaser.processE(true,"loi",5);
   // print(Result);
@@ -30,6 +31,14 @@ void main() {
  //  }else {
  //    print(Text("NUmber is" + RandomNumber));
  //  }
+ // String UID ='SobC6QgqqY2Bb7UgWuJn';
+ // GetRing(UID);
+ // getDocs();
+  // FetchusersData();
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  // final FirebaseUser user = await auth.currentUser();
+  // final uid = user.uid;
+  // GetRing(uid);
 }
 
 class ChatterApp extends StatelessWidget {

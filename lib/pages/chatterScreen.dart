@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:chatcrypto/Result.dart';
+import 'package:chatcrypto/Services/COnverter.dart';
 import 'package:chatcrypto/Services/CeaserCipher.dart';
 import 'package:edge_alert/edge_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ final _firestore = Firestore.instance;
 String username = 'User';
 String email = 'user@example.com';
 String messageText;
+String UUID;
 FirebaseUser loggedInUser;
 
 class ChatterScreen extends StatefulWidget {
@@ -39,6 +41,9 @@ class _ChatterScreenState extends State<ChatterScreen> {
         setState(() {
           username = loggedInUser.displayName;
           email = loggedInUser.email;
+
+
+
         });
       }
     } catch (e) {
@@ -50,36 +55,7 @@ class _ChatterScreenState extends State<ChatterScreen> {
           backgroundColor: Colors.deepPurple[900]);
     }
   }
-  // void getMessages()async{
-  //   final messages=await _firestore.collection('messages').getDocuments();
-  //   for(var message in messages.documents){
-  //     print(message.data);
-  //   }
-  // }
-
-  // void messageStream() async {
-  //   await for (var snapshot in _firestore.collection('messages').snapshots()) {
-  //     snapshot.documents;
-  //   }
-  // }
-  String RandomNumber ;
-  // void Rand(){
-  //   var rng = Random();
-  //   for (var i = 1; i < 26; i++) {
-  //     print(rng.nextInt(26));
-  //     RandomNumber =rng.toString();
-  //   }
-  // }
-  void Random_Generator(){
-    RandomNumber = Random().nextInt(26).toString();
-    int Randomdata= int.parse(RandomNumber);
-    print(RandomNumber);
-    if(Randomdata==0){
-      Random();
-    }else {
-      print(Text("NUmber is" + RandomNumber));
-    }
-  }
+  int NewMsgKey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,18 +70,11 @@ class _ChatterScreenState extends State<ChatterScreen> {
               backgroundColor: Colors.blue[100],
             ),
             decoration: BoxDecoration(
-              // color: Colors.blue,
-
-              // borderRadius: BorderRadius.circular(20)
             ),
             constraints: BoxConstraints.expand(height: 1),
           ),
         ),
         backgroundColor: Colors.white10,
-        // leading: Padding(
-        //   padding: const EdgeInsets.all(12.0),
-        //   child: CircleAvatar(backgroundImage: NetworkImage('https://cdn.clipart.email/93ce84c4f719bd9a234fb92ab331bec4_frisco-specialty-clinic-vail-health_480-480.png'),),
-        // ),
         title: Row(
           children: <Widget>[
             Column(
@@ -118,11 +87,7 @@ class _ChatterScreenState extends State<ChatterScreen> {
                       fontSize: 16,
                       color: Colors.deepPurple),
                 ),
-                Text('by ishandeveloper',
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 8,
-                        color: Colors.deepPurple))
+
               ],
             ),
           ],
@@ -192,36 +157,39 @@ class _ChatterScreenState extends State<ChatterScreen> {
                     shape: CircleBorder(),
                     color: Colors.blue,
                     onPressed: () async{
-                      int CountUser_KU = username.length;
-
-
-                      Random_Generator();
-                      int Randomdata= int.parse(RandomNumber);
-                    // await Ceaser.processE(true,messageText , Randomdata);
-                     await Ceaser.processE(true,messageText , Randomdata);
-                      print(Result);
-                      //Randomkey = data;
-                    // await Ceaser.processE2(true,RandomNumber ,CountUser_KU );
-                     await Ceaser.processE2(true, RandomNumber, CountUser_KU);
-                      print(Result3);
+                      // myUsername;
+                      // myEmail;
+                      myKu;
+                      int u = username.length;
+                     await Ceaser.process(false, myKu, u);
+                       print(ResultD2);
+                         //
+                          int a = int.parse(ResultD2);
+                         // int b = messageText.length;
+                         // int temp = a + b;
+                         //  NewMsgKey = temp*6;
+                         // if(NewMsgKey >= 26){
+                         //    NewMsgKey = NewMsgKey%26;
+                         // }
+                        await Ceaser.process(true, messageText, a);
+                        ResultD2;
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final FirebaseUser user = await auth.currentUser();
+                      final uid = user.uid;
                       chatMsgTextController.clear();
-                      _firestore.collection('messages').add({
+                        await _firestore.collection('messages').add({
                         'sender': username,
-                        'textone': Result,
-                        'texttwo': Result3,
+                        'UserID': uid,
+                        'msg': ResultD2,
                         'timestamp':DateTime.now().millisecondsSinceEpoch,
                         'senderemail': email,
-                        'senderKU': CountUser_KU,
                       });
+                      ResultD2 ='';
                     },
                     child:Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Icon(Icons.send,color: Colors.white,),
                     )
-                  // Text(
-                  //   'Send',
-                  //   style: kSendButtonTextStyle,
-                  // ),
                 ),
               ],
             ),
@@ -233,34 +201,68 @@ class _ChatterScreenState extends State<ChatterScreen> {
 }
 
 class ChatStream extends StatelessWidget {
+
   @override
+  String myUsername_Dec = '';
+  String myEmail_Dec = '';
+  String myKu2_Dec = '';
+  String UID_Dec ;
+  GetRing_Dec(String Uid_Dec) {
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    _firebaseAuth.currentUser;
+    Firestore.instance.collectionGroup("Peoples").reference().document("Users")
+        .collection(Uid_Dec)
+        .snapshots()
+        .listen((userData) {
+      myUsername_Dec = userData.documents[0]['Name'];
+      myEmail_Dec = userData.documents[0]['email'];
+      myKu2_Dec = userData.documents[0]['Ku'];
+    });
+  }
+
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _firestore.collection('messages').orderBy('timestamp').snapshots(),
+    int D_NewMsgKey;
+    bool load ;
+    return  StreamBuilder (
+      stream:  _firestore.collection('messages').orderBy('timestamp').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data.documents.reversed;
           List<MessageBubble> messageWidgets = [];
           for (var message in messages) {
-            final msgText = message.data['textone'];
-            final msgText2 = message.data['texttwo'];
-            final msgSender = message.data['sender'];
-            final SenderKU = message.data['senderKU'];
-            // final msgSenderEmail = message.data['senderemail'];
-            final currentUser = loggedInUser.displayName;
-        //    Ceaser.processD(false,msgText2 , SenderKU);
-            Ceaser.process(false, msgText2, SenderKU);
-            print(ResultD2);
-            int CtD= int.parse(ResultD2);
-            Ceaser.processDecryptFinal(false,msgText , CtD);
+            final Uid = message.data['UserID'];
+            myUsername_Dec;
+            myEmail_Dec;
+            myKu2_Dec;
+            GetRing_Dec(Uid);
 
-            // print('MSG'+msgSender + '  CURR'+currentUser);
-            final msgBubble = MessageBubble(
-                msgText: ResultDecryptFinal,
-                SenderKU: SenderKU.toString(),
-                msgSender: msgSender,
-                user: currentUser == msgSender);
-            messageWidgets.add(msgBubble);
+
+            final msgSender = message.data['sender'];
+            final msg = message.data['msg'];
+              myUsername_Dec;
+              myEmail_Dec;
+              myKu2_Dec;
+              int u = myUsername_Dec.length;
+              Ceaser.processDecryptFinal(false, myKu2_Dec, u);
+              print(ResultDecryptFinal);
+              int a = int.parse(ResultDecryptFinal);
+            // int aa = a;
+            // int b = msg.length;
+            // int temp = aa + b;
+            // int tmepResult = temp*6;
+            //  D_NewMsgKey = tmepResult.toInt();
+            // if(D_NewMsgKey >= 26){
+            //   D_NewMsgKey = D_NewMsgKey%26;
+            // }
+            Ceaser.processDecryptFinal(false, msg, a);
+              print(ResultDecryptFinal);
+              final currentUser = loggedInUser.displayName;
+              final msgBubble = MessageBubble(
+                  msgText: ResultDecryptFinal,
+                  msgSender: msgSender,
+                  user: currentUser == msgSender);
+              messageWidgets.add(msgBubble);
+
           }
           return Expanded(
             child: ListView(
@@ -315,7 +317,7 @@ class MessageBubble extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Text(
-                msgText +" KU ("+SenderKU+")",
+                msgText ??"no",
                 style: TextStyle(
                   color: user ? Colors.white : Colors.blue,
                   fontFamily: 'Poppins',

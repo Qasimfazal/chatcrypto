@@ -171,7 +171,7 @@ class Ceaser {
       if (ch >= 'a'.codeUnitAt(0) && ch <= 'z'.codeUnitAt(0)) {
         offset = 49;
       } else if (ch >= 'A'.codeUnitAt(0) && ch <= 'Z'.codeUnitAt(0)) {
-        offset = 65;
+        offset = 49;
       } else if (ch >= '1'.codeUnitAt(0) && ch <= '9'.codeUnitAt(0) ) {
         offset = 65;
         //   // _temp += " ";

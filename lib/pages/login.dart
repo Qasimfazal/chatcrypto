@@ -1,10 +1,15 @@
 
+import 'package:chatcrypto/Services/CeaserCipher.dart';
+import 'package:chatcrypto/Services/Model.dart';
 import 'package:chatcrypto/widgets/custombutton.dart';
 import 'package:chatcrypto/widgets/customtextinput.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edge_alert/edge_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
+import '../Result.dart';
 
 class ChatterLogin extends StatefulWidget {
   @override
@@ -16,6 +21,7 @@ class _ChatterLoginState extends State<ChatterLogin> {
   String password;
   bool loggingin = false;
   final _auth = FirebaseAuth.instance;
+  final _firestore = Firestore.instance;
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -105,6 +111,29 @@ class _ChatterLoginState extends State<ChatterLogin> {
                               setState(() {
                                 loggingin = false;
                               });
+                              //List<UsersData> FetchedUsersData = [];
+                            //   final FirebaseAuth auth = FirebaseAuth.instance;
+                            //
+                            // final FirebaseUser user = await auth.currentUser();
+                            //   var uid = user.uid;
+                            //  _firestore.collection('Users').snapshots();
+                              // final messages = snapshot.data.documents.reversed;
+                              // await _firestore.collection('Users').reference().snapshots({
+                              //   FetchedUsersData.add(UsersData(
+                              //   )),
+                              //   // "Name": name,
+                              //   // "email": email,
+                              //   // "password": password,
+                              //   // "Ku": SignUpKuConverted,
+                              // });
+                        //      getDocs();
+                              // Ceaser.process(false, 'msgText2', 0);
+                              // print(ResultD2);
+                              // int CtD= int.parse(ResultD2);
+                              final FirebaseAuth auth = FirebaseAuth.instance;
+                              final FirebaseUser user = await auth.currentUser();
+                              final uid = user.uid;
+                              await GetRing(uid);
                               Navigator.pushNamed(context, '/chat');
                             }
                           } catch (e) {
